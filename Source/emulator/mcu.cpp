@@ -275,21 +275,15 @@ uint16_t MCU::MCU_AnalogReadPin(uint32_t pin)
 {
     if (mcu_cm300)
         return 0;
+
     if (mcu_jv880)
     {
         if (pin == 1)
             return ANALOG_LEVEL_BATTERY;
         return 0x3ff;
     }
-    if (0)
-    {
-READ_RCU:
-        uint8_t rcu = RCU_Read();
-        if (rcu & (1 << pin))
-            return ANALOG_LEVEL_RCU_HIGH;
-        else
-            return ANALOG_LEVEL_RCU_LOW;
-    }
+
+    // Refactor previous `if (0)` into something meaningful
     if (mcu_mk1)
     {
         if (mcu_sc155 && (dev_register[DEV_P9DR] & 1) != 0)
@@ -304,7 +298,13 @@ READ_RCU:
                 return ANALOG_LEVEL_BATTERY;
         }
         else
-            goto READ_RCU;
+        {
+            uint8_t rcu = RCU_Read();
+            if (rcu & (1 << pin))
+                return ANALOG_LEVEL_RCU_HIGH;
+            else
+                return ANALOG_LEVEL_RCU_LOW;
+        }
     }
     else
     {
@@ -316,35 +316,46 @@ READ_RCU:
         {
             if (mcu_mk1)
                 return ANALOG_LEVEL_BATTERY;
+
             switch ((io_sd >> 2) & 3)
             {
-            case 0: // Battery voltage
-                return ANALOG_LEVEL_BATTERY;
-            case 1: // NC
-                if (mcu_sc155)
-                    return MCU_SC155Sliders(8);
-                return 0;
-            case 2: // SW
-                switch (sw_pos)
-                {
-                case 0:
-                default:
-                    return ANALOG_LEVEL_SW_0;
-                case 1:
-                    return ANALOG_LEVEL_SW_1;
-                case 2:
-                    return ANALOG_LEVEL_SW_2;
-                case 3:
-                    return ANALOG_LEVEL_SW_3;
-                }
-            case 3: // RCU
-                goto READ_RCU;
+                case 0: // Battery voltage
+                    return ANALOG_LEVEL_BATTERY;
+                case 1: // NC
+                    if (mcu_sc155)
+                        return MCU_SC155Sliders(8);
+                    return 0;
+                case 2: // SW
+                    switch (sw_pos)
+                    {
+                        case 0: return ANALOG_LEVEL_SW_0;
+                        case 1: return ANALOG_LEVEL_SW_1;
+                        case 2: return ANALOG_LEVEL_SW_2;
+                        case 3: return ANALOG_LEVEL_SW_3;
+                    }
+                    break;
+                case 3: // RCU
+                    uint8_t rcu = RCU_Read();
+                    if (rcu & (1 << pin))
+                        return ANALOG_LEVEL_RCU_HIGH;
+                    else
+                        return ANALOG_LEVEL_RCU_LOW;
             }
         }
         else
-            goto READ_RCU;
+        {
+            uint8_t rcu = RCU_Read();
+            if (rcu & (1 << pin))
+                return ANALOG_LEVEL_RCU_HIGH;
+            else
+                return ANALOG_LEVEL_RCU_LOW;
+        }
     }
+
+    // Ensure the function always returns a value in all cases
+    return 0;  // Default return if none of the conditions were met
 }
+
 
 void MCU::MCU_AnalogSample(int channel)
 {
