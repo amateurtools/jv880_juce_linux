@@ -6,13 +6,9 @@ You'll need ROMs to use this software. During the first run you will be able to 
 
 ![Screenshot](./screenshoot.png)
 
-## Plugin downloads
+## MacOS and Windows binaries may be found here:
 
-- [MacOS AU](https://github.com/giulioz/jv880_juce/releases/download/latest/jv880.component.macOS.zip)
-- [MacOS VSTi](https://github.com/giulioz/jv880_juce/releases/download/latest/jv880.vst3.macOS.zip)
-- [MacOS Standalone](https://github.com/giulioz/jv880_juce/releases/download/latest/jv880.app.macOS.zip)
-- [Windows VSTi](https://github.com/giulioz/jv880_juce/releases/download/latest/jv880.vst3)
-- [Windows Standalone](https://github.com/giulioz/jv880_juce/releases/download/latest/jv880.exe)
+- [Original branch of jv880_juce](https://github.com/giulioz/jv880_juce/)
 
 **NOTE (Windows)**: If you are having troubles with Windows 10, it's possible you need to install the [Visual C++ 2022 Redistributable](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170#latest-microsoft-visual-c-redistributable-version).
 
